@@ -2,28 +2,58 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>بطاقة تهنئة بالعيد</title>
+<title><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title> ...  ALKARIMI ... بطاقة تهنئة بالعيد</title>
+
+<!-- خط عربي -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
   body {
-    font-family: Arial;
+    font-family: 'Cairo', sans-serif;
     text-align: center;
-    background: #f5f5f5;
+    background: linear-gradient(135deg, #0d6efd, #0a3d91);
+    color: white;
+    padding: 30px;
   }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
   input {
-    padding: 10px;
-    width: 250px;
+    padding: 12px;
+    width: 260px;
     font-size: 16px;
-    margin: 10px;
+    border-radius: 8px;
+    border: none;
   }
+
   button {
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 15px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    margin: 5px;
   }
+
+  button:first-of-type {
+    background: #ffc107;
+  }
+
+  button:last-of-type {
+    background: #28a745;
+    color: white;
+  }
+
   canvas {
-    margin-top: 20px;
-    border-radius: 12px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: #ffffff;
   }
 </style>
 </head>
@@ -36,7 +66,7 @@
 <br>
 
 <button onclick="generate()">عرض البطاقة</button>
-<button onclick="download()">تحميل الصورة</button>
+<button onclick="download()">تحميل</button>
 
 <br>
 
@@ -49,22 +79,148 @@ const ctx = canvas.getContext("2d");
 function generate() {
   const name = document.getElementById("name").value;
 
-  // خلفية
-  ctx.fillStyle = "#0d6efd";
+  if (!name) {
+    alert("اكتب اسمك أولاً");
+    return;
+  }
+
+  // خلفية بيضاء
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // عنوان
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 40px Arial";
-  ctx.fillText("عيدكم مبارك", 280, 120);
+  // إطار ذهبي
+  ctx.strokeStyle = "#d4af37";
+  ctx.lineWidth = 10;
+  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+  // العنوان
+  ctx.fillStyle = "#0d6efd";
+  ctx.font = "bold 42px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText("عيدكم مبارك", canvas.width / 2, 120);
 
   // الاسم
-  ctx.font = "bold 30px Arial";
-  ctx.fillText(name, 350, 200);
+  ctx.fillStyle = "#000";
+  ctx.font = "bold 32px Cairo";
+  ctx.fillText(name, canvas.width / 2, 200);
 
-  // نص إضافي
-  ctx.font = "20px Arial";
-  ctx.fillText("كل عام وأنتم بخير", 280, 260);
+  // النص السفلي
+  ctx.fillStyle = "#555";
+  ctx.font = "20px Cairo";
+  ctx.fillText("كل عام وأنتم بخير", canvas.width / 2, 260);
+}
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'eid-card.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+</script>
+
+</body>
+</html> ... هدية أبو محمد بطاقة تهنئة بالعيد</title>
+
+<!-- خط عربي -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Cairo', sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #0d6efd, #0a3d91);
+    color: white;
+    padding: 30px;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  input {
+    padding: 12px;
+    width: 260px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 15px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  button:first-of-type {
+    background: #ffc107;
+  }
+
+  button:last-of-type {
+    background: #28a745;
+    color: white;
+  }
+
+  canvas {
+    margin-top: 25px;
+    border-radius: 15px;
+    background: #ffffff;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
+
+<input id="name" placeholder="اكتب اسمك هنا">
+<br>
+
+<button onclick="generate()">عرض البطاقة</button>
+<button onclick="download()">تحميل</button>
+
+<br>
+
+<canvas id="card" width="800" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("card");
+const ctx = canvas.getContext("2d");
+
+function generate() {
+  const name = document.getElementById("name").value;
+
+  if (!name) {
+    alert("اكتب اسمك أولاً");
+    return;
+  }
+
+  // خلفية بيضاء
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // إطار ذهبي
+  ctx.strokeStyle = "#d4af37";
+  ctx.lineWidth = 10;
+  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+  // العنوان
+  ctx.fillStyle = "#0d6efd";
+  ctx.font = "bold 42px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText("عيدكم مبارك", canvas.width / 2, 120);
+
+  // الاسم
+  ctx.fillStyle = "#000";
+  ctx.font = "bold 32px Cairo";
+  ctx.fillText(name, canvas.width / 2, 200);
+
+  // النص السفلي
+  ctx.fillStyle = "#555";
+  ctx.font = "20px Cairo";
+  ctx.fillText("كل عام وأنتم بخير", canvas.width / 2, 260);
 }
 
 function download() {
