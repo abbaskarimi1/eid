@@ -1,118 +1,141 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>بطاقة تهنئة بالعيد  ... BY ALKARIMI...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بطاقة تهنئة بالعيد</title>
 
-<!-- خط عربي -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 
-<style>
-  body {
-    font-family: 'Cairo', sans-serif;
-    text-align: center;
-    background: linear-gradient(135deg, #0d6efd, #0a3d91);
-    color: white;
-    padding: 30px;
-  }
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #0d6efd, #0a3d91);
+      color: white;
+      padding: 30px 15px;
+      margin: 0;
+    }
 
-  h2 {
-    margin-bottom: 20px;
-  }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
 
-  input {
-    padding: 12px;
-    width: 260px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-  }
+    input[type="text"] {
+      padding: 12px;
+      width: 280px;
+      max-width: 90%;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 12px;
+    }
 
-  button {
-    padding: 10px 20px;
-    font-size: 15px;
-    margin: 10px 5px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+    button {
+      padding: 10px 20px;
+      font-size: 15px;
+      margin: 8px 5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+    }
 
-  button:first-of-type {
-    background: #ffc107;
-  }
+    .btn-preview {
+      background: #ffc107;
+      color: #000;
+    }
 
-  button:last-of-type {
-    background: #28a745;
-    color: white;
-  }
+    .btn-download {
+      background: #28a745;
+      color: white;
+    }
 
-  canvas {
-    margin-top: 25px;
-    border-radius: 15px;
-    background: #ffffff;
-  }
-</style>
+    .canvas-wrap {
+      margin-top: 25px;
+    }
+
+    canvas {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
-
 <body>
 
-<h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
+  <h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
 
-<input id="name" placeholder="اكتب اسمك هنا">
-<br>
+  <input type="text" id="name" placeholder="اكتب اسمك هنا">
+  <br>
 
-<button onclick="generate()">عرض البطاقة</button>
-<button onclick="download()">تحميل</button>
+  <button class="btn-preview" onclick="generateCard()">عرض البطاقة</button>
+  <button class="btn-download" onclick="downloadCard()">تحميل البطاقة</button>
 
-<br>
+  <div class="canvas-wrap">
+    <canvas id="card" width="900" height="1650"></canvas>
+  </div>
 
-<canvas id="card" width="800" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("card");
+    const ctx = canvas.getContext("2d");
 
-<script>
-const canvas = document.getElementById("card");
-const ctx = canvas.getContext("2d");
+    function generateCard() {
+      const name = document.getElementById("name").value.trim();
 
-function generate() {
-  const name = document.getElementById("name").value;
+      if (!name) {
+        alert("اكتب اسمك أولاً");
+        return;
+      }
 
-  if (!name) {
-    alert("اكتب اسمك أولاً");
-    return;
-  }
+      const bg = new Image();
+      bg.src = "eid-design.png";
 
-  // خلفية بيضاء
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+      bg.onload = function () {
+        // تنظيف اللوحة
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // إطار ذهبي
-  ctx.strokeStyle = "#d4af37";
-  ctx.lineWidth = 10;
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        // رسم التصميم كاملاً
+        ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
-  // العنوان
-  ctx.fillStyle = "#0d6efd";
-  ctx.font = "bold 42px Cairo";
-  ctx.textAlign = "center";
-  ctx.fillText("عيدكم مبارك", canvas.width / 2, 120);
+        // إعداد النص داخل المستطيل الأزرق
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 42px Cairo";
 
-  // الاسم
-  ctx.fillStyle = "#000";
-  ctx.font = "bold 32px Cairo";
-  ctx.fillText(name, canvas.width / 2, 200);
+        // ظل خفيف للنص
+        ctx.shadowColor = "rgba(0,0,0,0.20)";
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 2;
 
-  // النص السفلي
-  ctx.fillStyle = "#555";
-  ctx.font = "20px Cairo";
-  ctx.fillText("كل عام وأنتم بخير", canvas.width / 2, 260);
-}
+        // مكان الاسم داخل المستطيل الأزرق
+        const x = canvas.width / 2;
+        const y = 1225;
 
-function download() {
-  const link = document.createElement('a');
-  link.download = 'eid-card.png';
-  link.href = canvas.toDataURL();
-  link.click();
-}
-</script>
+        ctx.fillText(name, x, y);
+        ctx.restore();
+      };
+
+      bg.onerror = function () {
+        alert("تعذر تحميل الصورة. تأكد أن اسم الملف هو eid-design.png وموجود بجانب index.html");
+      };
+    }
+
+    function downloadCard() {
+      const link = document.createElement("a");
+      link.download = "eid-card.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
 
 </body>
 </html>
