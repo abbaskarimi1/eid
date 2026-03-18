@@ -31,6 +31,7 @@
       border: none;
       outline: none;
       margin-bottom: 12px;
+      font-family: 'Cairo', sans-serif;
     }
 
     button {
@@ -69,7 +70,7 @@
 </head>
 <body>
 
-  <h2>🎉  ... BY ALKARIMI  ...   صمّم بطاقة تهنئتك بالعيد</h2>
+  <h2>    ... BY ALKARIMI ... 🎉 صمّم بطاقة تهنئتك بالعيد</h2>
 
   <input type="text" id="name" placeholder="اكتب اسمك هنا">
   <br>
@@ -84,49 +85,55 @@
   <script>
     const canvas = document.getElementById("card");
     const ctx = canvas.getContext("2d");
+    const bg = new Image();
+    bg.src = "eid-design.png";
+
+    // رسم التصميم الأساسي مباشرة عند فتح الصفحة
+    bg.onload = function () {
+      drawBaseCard();
+    };
+
+    bg.onerror = function () {
+      alert("تعذر تحميل الصورة. تأكد أن اسم الملف هو eid-design.png وموجود بجانب index.html");
+    };
+
+    function drawBaseCard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+    }
 
     function generateCard() {
       const name = document.getElementById("name").value.trim();
 
+      // ارسم الخلفية أولاً
+      drawBaseCard();
+
       if (!name) {
-        alert("اكتب اسمك أولاً");
         return;
       }
 
-      const bg = new Image();
-      bg.src = "eid-design.png";
+      // تصغير الخط تلقائيًا إذا كان الاسم طويل
+      let fontSize = 42;
+      if (name.length > 18) fontSize = 34;
+      if (name.length > 25) fontSize = 28;
 
-      bg.onload = function () {
-        // تنظيف اللوحة
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `bold ${fontSize}px Cairo`;
 
-        // رسم التصميم كاملاً
-        ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+      ctx.shadowColor = "rgba(0,0,0,0.20)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 2;
 
-        // إعداد النص داخل المستطيل الأزرق
-        ctx.save();
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 42px Cairo";
+      // مكان الاسم داخل المستطيل الأزرق - نزلته قليلًا
+      const x = canvas.width / 2;
+      const y = 1225;
 
-        // ظل خفيف للنص
-        ctx.shadowColor = "rgba(0,0,0,0.20)";
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 2;
-
-        // مكان الاسم داخل المستطيل الأزرق
-        const x = canvas.width / 2;
-        const y = 1225;
-
-        ctx.fillText(name, x, y);
-        ctx.restore();
-      };
-
-      bg.onerror = function () {
-        alert("تعذر تحميل الصورة. تأكد أن اسم الملف هو eid-design.png وموجود بجانب index.html");
-      };
+      ctx.fillText(name, x, y);
+      ctx.restore();
     }
 
     function downloadCard() {
