@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>بطاقة تهنئة بالعيد</title>
+<style>
+  body {
+    font-family: Arial;
+    text-align: center;
+    background: #f5f5f5;
+  }
+  input {
+    padding: 10px;
+    width: 250px;
+    font-size: 16px;
+    margin: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  canvas {
+    margin-top: 20px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
+
+<input id="name" placeholder="اكتب اسمك هنا">
+<br>
+
+<button onclick="generate()">عرض البطاقة</button>
+<button onclick="download()">تحميل الصورة</button>
+
+<br>
+
+<canvas id="card" width="800" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("card");
+const ctx = canvas.getContext("2d");
+
+function generate() {
+  const name = document.getElementById("name").value;
+
+  // خلفية
+  ctx.fillStyle = "#0d6efd";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // عنوان
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 40px Arial";
+  ctx.fillText("عيدكم مبارك", 280, 120);
+
+  // الاسم
+  ctx.font = "bold 30px Arial";
+  ctx.fillText(name, 350, 200);
+
+  // نص إضافي
+  ctx.font = "20px Arial";
+  ctx.fillText("كل عام وأنتم بخير", 280, 260);
+}
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'eid-card.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+</script>
+
+</body>
+</html>
