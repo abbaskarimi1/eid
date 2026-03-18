@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -23,10 +22,25 @@
       font-size: 28px;
     }
 
+    h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
     .hint {
       font-size: 14px;
       opacity: 0.95;
       margin-bottom: 18px;
+    }
+
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
     }
 
     input[type="text"] {
@@ -35,10 +49,22 @@
       max-width: 90%;
       font-size: 16px;
       border-radius: 10px;
-      border: none;
+      border: 2px solid transparent;
       outline: none;
-      margin-bottom: 14px;
       font-family: 'Cairo', sans-serif;
+      transition: 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ffc107;
+      box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
+    }
+
+    .validation-message {
+      min-height: 24px;
+      font-size: 14px;
+      color: #ffe082;
+      font-weight: 700;
     }
 
     .designs {
@@ -92,6 +118,7 @@
       cursor: pointer;
       font-family: 'Cairo', sans-serif;
       font-weight: 700;
+      transition: 0.2s ease;
     }
 
     .btn-preview {
@@ -102,6 +129,12 @@
     .btn-download {
       background: #28a745;
       color: white;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .canvas-wrap {
@@ -120,28 +153,28 @@
 <body>
 
   <h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
-
-     <h3> ... BY ALKARIMI ... </h3>
-
-  
+  <h3>... BY ALKARIMI ...</h3>
   <div class="hint">اختر التصميم ثم اكتب اسمك واضغط عرض البطاقة</div>
 
-  <input type="text" id="name" placeholder="اكتب اسمك هنا">
+  <div class="input-wrap">
+    <input type="text" id="name" placeholder="اكتب اسمك هنا" maxlength="40">
+    <div class="validation-message" id="validationMessage"></div>
+  </div>
 
   <div class="designs">
     <div class="design-card selected" data-design="1" onclick="selectDesign(1)">
-      <img src="eid-design.png">
+      <img src="eid-design.png" alt="التصميم الأول">
       <div class="label">التصميم الأول</div>
     </div>
 
     <div class="design-card" data-design="2" onclick="selectDesign(2)">
-      <img src="eid-design2.png">
+      <img src="eid-design2.png" alt="التصميم الثاني">
       <div class="label">التصميم الثاني</div>
     </div>
   </div>
 
-  <button class="btn-preview" onclick="generateCard()">عرض البطاقة</button>
-  <button class="btn-download" onclick="downloadCard()">تحميل البطاقة</button>
+  <button class="btn-preview" id="previewBtn" disabled onclick="generateCard()">عرض البطاقة</button>
+  <button class="btn-download" id="downloadBtn" disabled onclick="downloadCard()">تحميل البطاقة</button>
 
   <div class="canvas-wrap">
     <canvas id="card" width="900" height="1650"></canvas>
@@ -150,6 +183,11 @@
   <script>
     const canvas = document.getElementById("card");
     const ctx = canvas.getContext("2d");
+
+    const nameInput = document.getElementById("name");
+    const previewBtn = document.getElementById("previewBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const validationMessage = document.getElementById("validationMessage");
 
     let selectedDesign = 1;
 
@@ -166,6 +204,22 @@
       }
     };
 
+    function getTrimmedName() {
+      return nameInput.value.trim();
+    }
+
+    function updateButtonsState() {
+      const hasName = getTrimmedName().length > 0;
+      previewBtn.disabled = !hasName;
+      downloadBtn.disabled = !hasName;
+
+      if (hasName) {
+        validationMessage.textContent = "";
+      } else {
+        validationMessage.textContent = "الرجاء كتابة الاسم أولاً";
+      }
+    }
+
     function renderBaseCard() {
       const img = new Image();
       img.src = designs[selectedDesign].src;
@@ -173,6 +227,10 @@
       img.onload = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+
+      img.onerror = function () {
+        validationMessage.textContent = "تعذر تحميل التصميم. تأكد من وجود ملفات الصور بالمجلد نفسه.";
       };
     }
 
@@ -185,13 +243,41 @@
 
       document.querySelector(`.design-card[data-design="${designNumber}"]`).classList.add("selected");
 
-      renderBaseCard();
+      const hasName = getTrimmedName().length > 0;
+      if (hasName) {
+        generateCard();
+      } else {
+        renderBaseCard();
+      }
+    }
+
+    function calculateFontSize(name) {
+      let fontSize;
+
+      if (selectedDesign === 1) {
+        fontSize = 55;
+      } else {
+        fontSize = 65;
+      }
+
+      if (name.length > 15) fontSize -= 8;
+      if (name.length > 20) fontSize -= 10;
+      if (name.length > 28) fontSize -= 10;
+
+      return fontSize;
     }
 
     function generateCard() {
-      const name = document.getElementById("name").value.trim();
-      const currentDesign = designs[selectedDesign];
+      const name = getTrimmedName();
 
+      if (!name) {
+        validationMessage.textContent = "الرجاء كتابة الاسم أولاً";
+        nameInput.focus();
+        updateButtonsState();
+        return;
+      }
+
+      const currentDesign = designs[selectedDesign];
       const img = new Image();
       img.src = currentDesign.src;
 
@@ -199,27 +285,13 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        if (!name) return;
-
-let fontSize;
-
-// حجم مختلف لكل تصميم
-if (selectedDesign === 1) {
-  fontSize = 55;
-} else {
-  fontSize = 65;
-}
-
-// تصغير ذكي حسب طول الاسم
-if (name.length > 15) fontSize -= 8;
-if (name.length > 20) fontSize -= 10;
-if (name.length > 28) fontSize -= 10;
+        const fontSize = calculateFontSize(name);
 
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = currentDesign.nameColor;
-      ctx.font = `900 ${fontSize}px Cairo`;
+        ctx.font = `900 ${fontSize}px Cairo`;
 
         ctx.shadowColor = "rgba(0,0,0,0.18)";
         ctx.shadowBlur = 4;
@@ -232,16 +304,42 @@ if (name.length > 28) fontSize -= 10;
         ctx.fillText(name, x, y);
         ctx.restore();
       };
+
+      img.onerror = function () {
+        validationMessage.textContent = "تعذر تحميل التصميم. تأكد من وجود ملفات الصور بالمجلد نفسه.";
+      };
     }
 
     function downloadCard() {
-      const link = document.createElement("a");
-      link.download = "eid-card.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      const name = getTrimmedName();
+
+      if (!name) {
+        validationMessage.textContent = "اكتب اسمك أولاً قبل تحميل البطاقة";
+        nameInput.focus();
+        updateButtonsState();
+        return;
+      }
+
+      generateCard();
+
+      setTimeout(() => {
+        const link = document.createElement("a");
+        link.download = "eid-card.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }, 150);
     }
 
+    nameInput.addEventListener("input", function () {
+      updateButtonsState();
+
+      if (getTrimmedName().length === 0) {
+        renderBaseCard();
+      }
+    });
+
     window.onload = function () {
+      updateButtonsState();
       renderBaseCard();
     };
   </script>
