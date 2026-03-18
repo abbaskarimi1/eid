@@ -201,15 +201,25 @@
 
         if (!name) return;
 
-        let fontSize = 42;
-        if (name.length > 18) fontSize = 34;
-        if (name.length > 25) fontSize = 28;
+let fontSize;
+
+// حجم مختلف لكل تصميم
+if (selectedDesign === 1) {
+  fontSize = 55;
+} else {
+  fontSize = 65;
+}
+
+// تصغير ذكي حسب طول الاسم
+if (name.length > 15) fontSize -= 8;
+if (name.length > 20) fontSize -= 10;
+if (name.length > 28) fontSize -= 10;
 
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = currentDesign.nameColor;
-        ctx.font = `bold ${fontSize}px Cairo`;
+      ctx.font = `900 ${fontSize}px Cairo`;
 
         ctx.shadowColor = "rgba(0,0,0,0.18)";
         ctx.shadowBlur = 4;
