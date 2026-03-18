@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -120,7 +121,7 @@
 
   <h2>🎉 صمّم بطاقة تهنئتك بالعيد</h2>
 
-   <h3> ... BY ALKARIMI ... </h3>
+     <h3> ... BY ALKARIMI ... </h3>
 
   
   <div class="hint">اختر التصميم ثم اكتب اسمك واضغط عرض البطاقة</div>
@@ -129,12 +130,12 @@
 
   <div class="designs">
     <div class="design-card selected" data-design="1" onclick="selectDesign(1)">
-      <img src="eid-design.png" alt="التصميم الأول">
+      <img src="eid-design.png">
       <div class="label">التصميم الأول</div>
     </div>
 
     <div class="design-card" data-design="2" onclick="selectDesign(2)">
-      <img src="eid-design2.png" alt="التصميم الثاني">
+      <img src="eid-design2.png">
       <div class="label">التصميم الثاني</div>
     </div>
   </div>
@@ -159,7 +160,7 @@
         nameColor: "#ffffff"
       },
       2: {
-        src: "eid-design-2.png",
+        src: "eid-design2.png",
         nameY: 1385,
         nameColor: "#0d2e4d"
       }
@@ -172,10 +173,6 @@
       img.onload = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      };
-
-      img.onerror = function () {
-        alert("تعذر تحميل التصميم المختار. تأكد أن الملفات موجودة بنفس المجلد.");
       };
     }
 
@@ -224,10 +221,6 @@
 
         ctx.fillText(name, x, y);
         ctx.restore();
-      };
-
-      img.onerror = function () {
-        alert("تعذر تحميل التصميم المختار. تأكد أن الملفات موجودة بنفس المجلد.");
       };
     }
 
